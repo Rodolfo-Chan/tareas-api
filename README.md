@@ -25,7 +25,7 @@ API REST para la gestión de usuarios y tareas con autenticación basada en JWT.
 ### 1. Clona el repositorio
 
 ```bash
-git clone https://github.com/tu-usuario/backend-task-manager.git
+git clone https://github.com/Rodolfo-Chan/tareas-api.git
 cd backend-task-manager
 ```
 ###📦 2.Instala las dependencias
