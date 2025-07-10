@@ -1,6 +1,9 @@
 const express = require('express');
 const cors = require('cors');
+
 const taskRoutes = require('./routes/task.routes');
+// Prepara rutas de usuarios/autenticación
+const authRoutes = require('./routes/auth.routes'); // <-- por agregar
 
 const app = express();
 
@@ -8,12 +11,13 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-// Ruta raíz para verificar que el servidor responde
+// Ruta raíz
 app.get('/', (req, res) => {
-  res.send('🚀 API de tareas funcionandoo en Railway');
+  res.send('🚀 API de tareas funcionando en Railway');
 });
 
-// Rutas de tareas
+// Rutas
 app.use('/api/tasks', taskRoutes);
+app.use('/api/auth', authRoutes); // <-- login y registro
 
 module.exports = app;

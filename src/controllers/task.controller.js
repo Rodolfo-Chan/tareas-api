@@ -1,31 +1,74 @@
 //controllers/task.controllers.js 
 
-const TaskService = require('../services/task.service');
+const Task = require('../models/task.model');
+
+// Obtener todas las tareas del usuario autenticado
 
 exports.getAllTasks = async (req, res) => {
-  const tasks = await TaskService.getAll();
-  res.json(tasks);
+  try {
+    const tasks = await Task.find({ usuario: req.user.userId });
+    res.json(tasks);
+  } catch (error) {
+    console.error('Error en getAllTasks:', error);
+    res.status(500).json({ error: 'Error al obtener las tareas' });
+  }
 };
-
+// Obtener una tarea específica por ID (del usuario autenticado)
 exports.getTaskById = async (req, res) => {
-  const task = await TaskService.getById(req.params.id);
-  if (!task) return res.status(404).json({ error: 'Tarea no encontrada' });
-  res.json(task);
+  try {
+    const task = await Task.findOne({ _id: req.params.id, usuario: req.user.userId });
+    if (!task) return res.status(404).json({ error: 'Tarea no encontrada' });
+    res.json(task);
+  } catch (error) {
+    res.status(500).json({ error: 'Error al buscar la tarea' });
+  }
 };
 
+// Crear una nueva tarea
 exports.createTask = async (req, res) => {
-  const task = await TaskService.create(req.body);
-  res.status(201).json(task);
+  try {
+    const { titulo, descripcion, estado } = req.body;
+
+    const nuevaTarea = new Task({
+      titulo,
+      descripcion,
+      estado,
+      usuario: req.user.userId // 👈 Aquí se usa correctamente
+    });
+
+    await nuevaTarea.save();
+    res.status(201).json(nuevaTarea);
+  } catch (error) {
+    console.error('Error al crear la tareassss:', error);
+    console.log('Usuario autenticado:', req.user); // Esto debe mostrar el objeto decodificado del JWT
+
+    res.status(500).json({ error: 'Error al crear la tarea' });
+  }
 };
 
+
+// Actualizar una tarea del usuario autenticado
 exports.updateTask = async (req, res) => {
-  const updated = await TaskService.update(req.params.id, req.body);
-  if (!updated) return res.status(404).json({ error: 'Tarea no encontrada' });
-  res.json(updated);
+  try {
+    const task = await Task.findOneAndUpdate(
+      { _id: req.params.id, usuario: req.user.userId },
+      req.body,
+      { new: true }
+    );
+    if (!task) return res.status(404).json({ error: 'Tarea no encontrada' });
+    res.json(task);
+  } catch (error) {
+    res.status(500).json({ error: 'Error al actualizar la tarea' });
+  }
 };
 
+// Eliminar una tarea del usuario autenticado
 exports.deleteTask = async (req, res) => {
-  const deleted = await TaskService.delete(req.params.id);
-  if (!deleted) return res.status(404).json({ error: 'Tarea no encontrada' });
-  res.json({ mensaje: 'Tarea eliminada' });
+  try {
+    const task = await Task.findOneAndDelete({ _id: req.params.id, usuario: req.user.userId });
+    if (!task) return res.status(404).json({ error: 'Tarea no encontrada' });
+    res.json({ mensaje: 'Tarea eliminada' });
+  } catch (error) {
+    res.status(500).json({ error: 'Error al eliminar la tarea' });
+  }
 };
