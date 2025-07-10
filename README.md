@@ -1,7 +1,7 @@
 # 🚀 Task Manager - Backend API
 
 API REST para la gestión de usuarios y tareas con autenticación basada en JWT.
-![App Screenshot](https://via.placeholder.com/468x300?text=App+Screenshot+Here)
+![App Screenshot](https://github.com/Rodolfo-Chan/tareas-api/blob/main/Screenshot_mongodb.png)
 ![App Screenshot](https://via.placeholder.com/468x300?text=App+Screenshot+Here)
 
 ---
